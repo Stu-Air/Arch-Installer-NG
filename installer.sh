@@ -40,6 +40,8 @@ setup() {
    installBase
 
    echo 'Chrooting into installed system to continue setup...'
+   cp pkglist.txt /mnt
+   cp pkglist_aur.txt /mnt
    cp $0 /mnt/setup.sh
    arch-chroot /mnt ./setup.sh chroot
 
@@ -104,8 +106,8 @@ configure() {
     echo 'Creating initial user'
     create_user "$USER_NAME" "$USER_PASSWORD"
 
-    echo 'Installing yay aur helper'
-    install_yay
+    echo 'Installing paru aur helper'
+    install_paru
 
     echo 'Installing AUR packages'
     install_aur_packages
@@ -114,6 +116,8 @@ configure() {
     update_locate
 
     rm /setup.sh
+    rm /pkglist.txt
+    rm /pkglist_aur.txt
 }
 
 
@@ -170,58 +174,23 @@ unmount_filesystems() {
 }  
 
 install_packages() {
-   echo "enable multilib packages"
-   echo "[multilib]
-   Include = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
+    echo "enable multilib packages"
+    echo "[multilib]
+    Include = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 
-
-    local packages=''
-
-    # General utilities/libraries
-    packages+=' sudo acpi acpid nano wget grub efibootmgr dosfstools os-prober mtools fuse2 rsync  mesa  pulseaudio-bluetooth bluez bluez-utils fuse2 unzip gvfs exfat-utils ntfs-3g' #autofs
-
-    # Development packages
-    packages+=' base-devel git gettext jq typescript sassc meson ninja'
-
-    # Netcfg
-    packages+=' networkmanager wpa_supplicant wireless_tools netctl dhcpcd dialog'
+    pacman -Sy --noconfirm $CHIPSET
     
-    # Java stuff
-    packages+=' '
-
-    # Libreoffice
-    packages+=' libreoffice-fresh'
-
-    # Misc programs
-    packages+=' htop neofetch bash-completion rclone mpv transmission-gtk thunderbird signal-desktop discord firefox'
-
-    # Xserver
-    packages+=' xorg xorg-apps xdg-user-dirs' #xdg-user-dirs-update
-
-    # Slim login manager
-    packages+=' '
-
-    # Fonts
-    packages+=' '
-
-    # On processors
-    packages+=' xf86-video-amdgpu' #"$chipset"
-
-    # For laptops
-    packages+=' xf86-input-synaptics'
-
-    
- if [ "$DESKTOP" = "gnome" ]
+  if [ "$DESKTOP" = "gnome" ]
     then
-        packages+=' gnome-desktop gnome-session gnome-control-center gnome-shell-extensions gnome-terminal nautilus gedit file-roller eog gnome-tweaks evince gnome-keyring gdm'
+        pacman -Sy --noconfirm gnome gdm
  elif [ "$DESKTOP" = "kde" ]
     then
-         packages+='plasma'
+        pacman -Sy --noconfirm plasma sddm
  elif [ "$DESKTOP" = "xfce" ]
     then
-         packages+='xfce4'
+        pacman -Sy --noconfirm xfce4 lightdm
  fi
-    pacman -Sy --noconfirm $packages
+    pacman -Sy --noconfirm - < /pkglist.txt
 }
 
 
@@ -319,19 +288,17 @@ set_extras() {
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
 }
 
-install_yay() {
+install_paru() {
     cd ~ 
-    git clone https://aur.archlinux.org/yay.git 
+    git clone https://aur.archlinux.org/paru-bin.git 
     chown $USER_NAME:$USER_NAME ~
-    chmod -R 777 yay
-    cd yay
-    sudo -u $USER_NAME makepkg -si --noconfirm
-    #pacman -U yay*.zst 
+    chmod -R 777 paru-bin
+    cd paru-bin
+    echo -en "$USER_PASSWORD" |sudo -u $USER_NAME makepkg -si --noconfirm
 }
 
 install_aur_packages(){
-    packages+='dropbox timeshift vscodium-bin minecraft-launcher whatsapp-nativefier'
-    echo -en "yay -Sy --noconfirm $packages" |  su "$USER_NAME"
+    echo -en "paru -Sy --noconfirm - < /pkglist_aur.txt" |  su "$USER_NAME"
     echo -en "$USER_PASSWORD" | su "$USER_NAME"
     #rm -rf /yay
 }
