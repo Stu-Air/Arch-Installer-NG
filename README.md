@@ -14,6 +14,23 @@ It's simply a installer which I like to use and which in my opinion makes the in
 
 THIS SCRIPT INSTALL ESSENTIAL PROGRAMS AND DEVELOPMENT TOOLS
 
+Added programs from another text files for easy editing of programs.
+This script installs :-
+
+Paru AUR helper
+libreoffice-fresh
+htop
+neofetch
+bash-completion
+rclone
+mpv
+transmission-gtk
+thunderbird
+signal-desktop
+discord
+firefox
+
+
 ## Usage
 If you just want to run the script with the default preset, download Arch linux and sig file from (https://www.archlinux.org/download/), 
 Verify runing command ( gpg --keyserver-options auto-key-retrieve --verify archlinux-version-x86_64.iso.sig ).
@@ -31,6 +48,5 @@ I AM NOT RESPONSIBLE FOR ANY DAMAGE TO YOUR MACHINE. please read carefully and u
 ## Future Tweaks
 
 by all means if anyone has any suggestions I or anyone else can try and add them. 
-
-I want to try programs from another text files for easy editing of programs. 
+  
 
