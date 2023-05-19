@@ -37,5 +37,8 @@ I AM NOT RESPONSIBLE FOR ANY DAMAGE TO YOUR MACHINE. please read carefully and u
 ## Future Tweaks
 
 by all means if anyone has any suggestions I or anyone else can try and add them. 
-  
+
+- [ ] adding default settings/applications from another project for each enviroment
+- [ ] Link to desktop switcher in https://github.com/Stu-Air/switcher-gnome
+- [ ] add on for 24bit audio 
 
