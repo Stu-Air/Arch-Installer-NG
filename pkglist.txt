@@ -33,17 +33,8 @@ wireless_tools
 netctl
 dhcpcd
 dialog
-libreoffice-fresh
-htop
-neofetch
 bash-completion
 rclone
-mpv
-transmission-gtk
-thunderbird
-signal-desktop
-discord
-firefox
 xorg
 xorg-apps
 xdg-user-dirs
