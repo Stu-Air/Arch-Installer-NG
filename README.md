@@ -1,7 +1,7 @@
 ##########
 # Arch Linux Install Script NG
 # Author: Stuart Kirker ( Stu )
-# Version: v2.0, 19-01-2023
+# Version: v2.1, 19-05-2023
 # Source: Personal Use
 ##########
 
@@ -9,7 +9,7 @@
 
 ## Description
 
-This is a Shell script for the automation of installing my personal Arch linux. This is by no means any complete set of all Settings needed for your system and neither is it another "antispying" type of script. 
+This is a Shell script for the automation of installing Arch linux. This is by no means any complete set of all Settings needed for your system and neither is it another "antispying" type of script. 
 It's simply a installer which I like to use and which in my opinion makes the installation process of Arch Linux on your computer less obtrusive.
 
 THIS SCRIPT INSTALL ESSENTIAL PROGRAMS AND DEVELOPMENT TOOLS
@@ -18,17 +18,6 @@ Added programs from another text files for easy editing of programs.
 This script installs :-
 
 Paru AUR helper
-libreoffice-fresh
-htop
-neofetch
-bash-completion
-rclone
-mpv
-transmission-gtk
-thunderbird
-signal-desktop
-discord
-firefox
 
 
 ## Usage
