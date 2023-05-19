@@ -41,7 +41,6 @@ setup() {
 
    echo 'Chrooting into installed system to continue setup...'
    cp pkglist.txt /mnt
-   cp pkglist_aur.txt /mnt
    cp $0 /mnt/setup.sh
    arch-chroot /mnt ./setup.sh chroot
 
@@ -109,15 +108,11 @@ configure() {
     echo 'Installing paru aur helper'
     install_paru
 
-    echo 'Installing AUR packages'
-    install_aur_packages
-
     echo 'Building locate database'
     update_locate
 
     rm /setup.sh
     rm /pkglist.txt
-    rm /pkglist_aur.txt
 }
 
 
@@ -261,30 +256,6 @@ set_sudoers() {
 
 
 set_extras() {
-  
-    ln -sf /mnt/Media/home/Downloads/* ~/Downloads
-    mkdir  ~/OneDrive
-    ln -sf /mnt/Media/home/Pictures/* ~/Pictures/
-    ln -sf /mnt/Media/home/Videos/* ~/Videos/
-    mkdir ~/.config/autostart
-    ln -sf /mnt/Media/home/.config/autostart/* ~/.config/autostart
-    ln -sf /mnt/Media/home/.config/discord ~/.config
-    ln -sf /mnt/Media/home/.config/nordvpn ~/.config
-    ln -sf /mnt/Media/home/.config/onedrive ~/.config
-    ln -sf /mnt/Media/home/.config/plank ~/.config
-    ln -sf /mnt/Media/home/.config/rclone ~/.config
-    ln -sf /mnt/Media/home/.config/tidal-hifi ~/.config
-    ln -sf /mnt/Media/home/.config/transmission ~/.config
-    ln -sf /mnt/Media/home/.config/whatsapp-nativefier-d40211 ~/.config
-    ln -sf /mnt/Media/home/.fonts ~/
-    ln -sf /mnt/Media/home/.minecraft ~/
-    ln -sf ~/.minecraft/screenshots ~/Pictures/minecraft-screenshots
-    ln -sf /mnt/Media/home/.thunderbird ~/
-    sudo ln -sf /mnt/Media/home/Pictures/profile\ pics/profile\ pic.png /var/lib/gdm3/.face
-    ln -sf /mnt/Media/home/Pictures/profile\ pics/profile\ pic.png ~/.face   
-    ln -sf /mnt/Media/home/.zsh/ ~/
-    ln -sf /mnt/Media/home/.zshrc ~/
-
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
 }
 
@@ -297,13 +268,6 @@ install_paru() {
     echo -en "$USER_PASSWORD" |sudo -u $USER_NAME makepkg -si --noconfirm
 }
 
-install_aur_packages(){
-    echo -en "paru -Sy --noconfirm - < /pkglist_aur.txt" |  su "$USER_NAME"
-    echo -en "$USER_PASSWORD" | su "$USER_NAME"
-    #rm -rf /yay
-}
-
-
 set_root_password() {
     echo -en "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
 }
@@ -312,8 +276,6 @@ create_user() {
     useradd -m -G wheel -s /bin/bash $USER_NAME
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
     }
-
-
 
 if [ "$1" == "chroot" ]
 then
