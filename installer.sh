@@ -230,7 +230,6 @@ set_fstab() {
       mkswap /swapfile
       echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
       swapon -s
-   echo "LABEL=Media                                  /mnt/Media   auto   nosuid,nodev,nofail,x-gvfs-show   0 0" | sudo tee -a /etc/fstab
 }
 
 set_initcpio() {
