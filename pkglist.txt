@@ -8,8 +8,6 @@ efibootmgr
 dosfstools
 os-prober
 mtools
-fuse2
-rsync
 mesa
 pulseaudio-bluetooth
 bluez
@@ -33,8 +31,6 @@ wireless_tools
 netctl
 dhcpcd
 dialog
-bash-completion
-rclone
 xorg
 xorg-apps
 xdg-user-dirs
