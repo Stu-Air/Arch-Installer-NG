@@ -276,15 +276,13 @@ extras(){
     then 
         cd ~/Downloads
         git clone https://github.com/Stu-Air/arch-apps.git
-        cd arch-apps/applications.sh
-        cd .. 
+        sh arch-apps/./applications.sh
  fi
   if [ "$SETTINGS" = "Y" ]
     then 
         cd ~/Downloads
         git clone https://github.com/Stu-Air/config.git
-        cd config/settings.sh
-        cd .. 
+        sh config/./settings.sh
  fi
 
 #desktop selection (soon to be split into layouts/settings for each)
