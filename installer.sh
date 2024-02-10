@@ -11,7 +11,11 @@ KEYMAP=''                           # Keyboard layout used in system
 WIRELESS_DEVICE=""               # Wireless device, leave blank to not use wireless and use DHCP instead
 WIRELESS_SSID=""      # Router connection name 
 CHIPSET="amd-ucode"                   # amd or intel
-DESKTOP=""                       # kde, xfce or gnome  desktop and login manager installed
+
+# Extras
+APPS="Y"                              # "Y" or "N" install personal applications from github repo (https://github.com/Stu-Air/arch-apps)
+SETTINGS="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
+DESKTOP="gnome"                       # kde, xfce or gnome desktop, login manager installed also 
 
 # Choose your video driver
     
@@ -26,8 +30,7 @@ setup() {
    local sys_dev="$DRIVE"p2
    
    echo "Connecting to wifi"
-   #wifi
-
+   #wifi  (NOT WORKING)
    #iwctl station "$WIRELESS_DEVICE" connect "$WIRELESS_SSID"
 
    echo "Creating partition tables"
@@ -111,6 +114,9 @@ configure() {
     echo 'Building locate database'
     update_locate
 
+    echo 'Adding your extras'
+    extras
+
     rm /setup.sh
     rm /pkglist.txt
 }
@@ -174,17 +180,6 @@ install_packages() {
     Include = /etc/pacman.d/mirrorlist" | tee -a /etc/pacman.conf
 
     pacman -Sy --noconfirm $CHIPSET
-    
-  if [ "$DESKTOP" = "gnome" ]
-    then
-        pacman -Sy --noconfirm gnome gdm
- elif [ "$DESKTOP" = "kde" ]
-    then
-        pacman -Sy --noconfirm plasma sddm
- elif [ "$DESKTOP" = "xfce" ]
-    then
-        pacman -Sy --noconfirm xfce4 lightdm
- fi
     pacman -Sy --noconfirm - < /pkglist.txt
 }
 
@@ -275,6 +270,35 @@ create_user() {
     useradd -m -G wheel -s /bin/bash $USER_NAME
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
     }
+    
+extras(){
+  if [ "$APPS" = "Y" ]
+    then 
+        cd ~/Downloads
+        git clone https://github.com/Stu-Air/arch-apps.git
+        cd arch-apps/applications.sh
+        cd .. 
+ fi
+  if [ "$SETTINGS" = "Y" ]
+    then 
+        cd ~/Downloads
+        git clone https://github.com/Stu-Air/config.git
+        cd config/settings.sh
+        cd .. 
+ fi
+
+#desktop selection (soon to be split into layouts/settings for each)
+  if [ "$DESKTOP" = "gnome" ]
+    then
+        pacman -Sy --noconfirm gnome gdm
+ elif [ "$DESKTOP" = "kde" ]
+    then
+        pacman -Sy --noconfirm plasma sddm
+ elif [ "$DESKTOP" = "xfce" ]
+    then
+        pacman -Sy --noconfirm xfce4 lightdm
+ fi
+}
 
 if [ "$1" == "chroot" ]
 then
