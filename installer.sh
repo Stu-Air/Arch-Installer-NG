@@ -99,9 +99,6 @@ configure() {
     echo 'Configuring sudo'
     set_sudoers
 
-    echo 'Configuring extras'
-    set_extras
-
     echo 'Setting root password'
     set_root_password "$ROOT_PASSWORD"
 
@@ -114,8 +111,8 @@ configure() {
     echo 'Building locate database'
     update_locate
 
-    echo 'Adding your extras'
-    extras
+    echo 'Configuring extras'
+    set_extras
 
     rm /setup.sh
     rm /pkglist.txt
@@ -251,6 +248,34 @@ set_sudoers() {
 
 set_extras() {
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
+
+ if [ "$DESKTOP" = "gnome" ]
+    then
+        pacman -Sy --noconfirm gnome gdm
+        systemctl enable gdm
+ elif [ "$DESKTOP" = "kde" ]
+    then
+        pacman -Sy --noconfirm plasma sddm
+        sysyemctl enable sddm
+ elif [ "$DESKTOP" = "xfce" ]
+    then
+        pacman -Sy --noconfirm xfce4 lightdm
+        systemctl enable lightdm
+ fi
+
+if [ "$APPS" = "Y" ]
+    then 
+        cd ~/Downloads
+        git clone https://github.com/Stu-Air/arch-apps.git
+        sh arch-apps/./applications.sh
+ fi
+  if [ "$SETTINGS" = "Y" ]
+    then 
+        cd ~/Downloads
+        git clone https://github.com/Stu-Air/config.git
+        sh config/./settings.sh
+ fi
+
 }
 
 install_paru() {
@@ -270,33 +295,6 @@ create_user() {
     useradd -m -G wheel -s /bin/bash $USER_NAME
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
     }
-    
-extras(){
-  if [ "$APPS" = "Y" ]
-    then 
-        cd ~/Downloads
-        git clone https://github.com/Stu-Air/arch-apps.git
-        sh arch-apps/./applications.sh
- fi
-  if [ "$SETTINGS" = "Y" ]
-    then 
-        cd ~/Downloads
-        git clone https://github.com/Stu-Air/config.git
-        sh config/./settings.sh
- fi
-
-#desktop selection (soon to be split into layouts/settings for each)
-  if [ "$DESKTOP" = "gnome" ]
-    then
-        pacman -Sy --noconfirm gnome gdm
- elif [ "$DESKTOP" = "kde" ]
-    then
-        pacman -Sy --noconfirm plasma sddm
- elif [ "$DESKTOP" = "xfce" ]
-    then
-        pacman -Sy --noconfirm xfce4 lightdm
- fi
-}
 
 if [ "$1" == "chroot" ]
 then
