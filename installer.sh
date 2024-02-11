@@ -90,9 +90,6 @@ configure() {
     echo 'Configuring initial ramdisk'
     set_initcpio
 
-    echo 'Setting initial daemons'
-    set_daemons
-
     echo 'Configuring bootloader'
     set_bootloader
 
@@ -113,6 +110,9 @@ configure() {
 
     echo 'Configuring extras'
     set_extras
+
+    echo 'Setting initial daemons'
+    set_daemons
 
     rm /installer.sh
     rm /pkglist.txt
