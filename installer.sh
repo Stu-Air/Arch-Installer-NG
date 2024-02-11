@@ -114,7 +114,7 @@ configure() {
     echo 'Configuring extras'
     set_extras
 
-    rm /setup.sh
+    rm /installer.sh
     rm /pkglist.txt
 }
 
@@ -265,15 +265,21 @@ set_extras() {
 
 if [ "$APPS" = "Y" ]
     then 
-        cd ~/Downloads
+        cd /
         git clone https://github.com/Stu-Air/arch-apps.git
-        sh arch-apps/./applications.sh
+        cd arch-apps
+        su "$USER_NAME"
+        sh ./applications.sh
+        exit
+        cd ..
  fi
   if [ "$SETTINGS" = "Y" ]
     then 
-        cd ~/Downloads
-        git clone https://github.com/Stu-Air/config.git
-        sh config/./settings.sh
+        cd /
+        git clone https://github.com/Stu-Air/dotfiles.git
+        cd dotfiles
+        sh ./settings.sh
+        cd .. 
  fi
 
 }
