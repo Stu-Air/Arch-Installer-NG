@@ -248,6 +248,7 @@ set_sudoers() {
 
 set_extras() {
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
+    mkdir /extras
 
  if [ "$DESKTOP" = "gnome" ]
     then
@@ -265,7 +266,7 @@ set_extras() {
 
 if [ "$APPS" = "Y" ]
     then 
-        cd /
+        cd /extras
         git clone https://github.com/Stu-Air/arch-apps.git
         cd arch-apps
         su "$USER_NAME"
@@ -275,13 +276,13 @@ if [ "$APPS" = "Y" ]
  fi
   if [ "$SETTINGS" = "Y" ]
     then 
-        cd /
+        cd /extras
         git clone https://github.com/Stu-Air/dotfiles.git
         cd dotfiles
         sh ./settings.sh
         cd .. 
  fi
-
+    rm -rf /extras
 }
 
 install_paru() {
