@@ -270,8 +270,7 @@ if [ "$APPS" = "Y" ]
         cd /extras
         git clone https://github.com/Stu-Air/arch-apps.git
         cd arch-apps
-        su "$USER_NAME"
-        sh ./applications.sh
+        su "$USER_NAME" | sh ./applications.sh
         exit
         cd ..
  fi
@@ -280,7 +279,8 @@ if [ "$APPS" = "Y" ]
         cd /extras
         git clone https://github.com/Stu-Air/dotfiles.git
         cd dotfiles
-        sh ./settings.sh
+        su "$USER_NAME" | sh ./settings.sh
+        exit
         cd .. 
  fi
     rm -rf /extras
