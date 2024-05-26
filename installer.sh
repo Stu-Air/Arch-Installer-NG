@@ -229,7 +229,8 @@ set_initcpio() {
 }
 
 set_daemons() {
-   systemctl enable NetworkManager bluetooth gdm
+   systemctl enable NetworkManager
+   systemctl enable bluetooth
 }
 
 set_bootloader() {
