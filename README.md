@@ -39,6 +39,20 @@ I AM NOT RESPONSIBLE FOR ANY DAMAGE TO YOUR MACHINE. please read carefully and u
 by all means if anyone has any suggestions I or anyone else can try and add them. 
 
 - [x] adding default settings/applications from another project for each enviroment
-- [ ] Link to desktop switcher in https://github.com/Stu-Air/switcher-gnome
-- [ ] add on for 24bit audio 
+- [ ] Link to desktop switcher in https://github.com/Stu-Air/switcher-gnome  10% complete (no gui cant code that) 
+- [ ] add on for 24bit audio
+- [ ] gaming section for graphics amd 1st/ nivdia to be added.
+- [ ] theming, icons etc. 
+
+## Issues 
+
+Things aren't going to plan, I would like this to be fully automatic, no babysitting. at some points it still asks for password or doesn't exit and continue.
+
+# Main niggles
+- [ ] Copying dotfiles to system is moving to root home instead of user.
+- [ ] After running the setting.sh and applications.sh from other repos it doesn't exit and continue, typing exit continues the rest of the script
+- [ ] some aur packages wont install mainly after timeshift is only installed. more testing needed!!
+
+If yourself come across any other issues please feel free to contact me. 
+
 
