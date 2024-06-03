@@ -1,0 +1,10 @@
+plasma-meta
+konsole
+kate
+dolphin
+ark
+plasma-workspace
+egl-wayland
+partitionmanager
+kvantum
+sddm
