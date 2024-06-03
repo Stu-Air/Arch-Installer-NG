@@ -44,10 +44,11 @@ setup() {
 
    echo 'Chrooting into installed system to continue setup...'
    cp pkglist.txt /mnt
-   cp $0 /mnt/setup.sh
-   arch-chroot /mnt ./setup.sh chroot
+   cp "$DESKTOP".txt /mnt
+   cp $0 /mnt/installer.sh
+   arch-chroot /mnt ./installer.sh chroot
 
-    if [ -f /mnt/setup.sh ]
+    if [ -f /mnt/installer.sh ]
     then
         echo 'ERROR: Something failed inside the chroot, not unmounting filesystems so you can investigate.'
         echo 'Make sure you unmount everything before you try to run this script again.'
@@ -116,6 +117,7 @@ configure() {
 
     rm /installer.sh
     rm /pkglist.txt
+    rm /"$DESKTOP".txt
 }
 
 
@@ -249,29 +251,35 @@ set_sudoers() {
 
 set_extras() {
     sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
-    mkdir /extras
-
+    
  if [ "$DESKTOP" = "gnome" ]
     then
-        pacman -Sy --noconfirm gnome gdm
+        cd/
+        pacman -Sy --noconfirm - < /gnome.txt
         systemctl enable gdm
- elif [ "$DESKTOP" = "kde" ]
-    then
-        pacman -Sy --noconfirm plasma sddm
-        sysyemctl enable sddm
- elif [ "$DESKTOP" = "xfce" ]
-    then
-        pacman -Sy --noconfirm xfce4 lightdm
-        systemctl enable lightdm
  fi
+ if [ "$DESKTOP" = "kde" ]
+    then
+        cd /
+        pacman -Sy --noconfirm - < /kde.txt
+        sysyemctl enable sddm
+ fi       
+ if [ "$DESKTOP" = "xfce" ]
+    then
+        cd /
+        pacman -Sy --noconfirm - < /xfce.txt
+        systemctl enable lightdm
+        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
+ fi
+
+mkdir /extras
 
 if [ "$APPS" = "Y" ]
     then 
         cd /extras
         git clone https://github.com/Stu-Air/arch-apps.git
         cd arch-apps
-        su "$USER_NAME" | sh ./applications.sh
-        exit
+        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./applications.sh"
         cd ..
  fi
   if [ "$SETTINGS" = "Y" ]
@@ -279,8 +287,7 @@ if [ "$APPS" = "Y" ]
         cd /extras
         git clone https://github.com/Stu-Air/dotfiles.git
         cd dotfiles
-        su "$USER_NAME" | sh ./settings.sh
-        exit
+        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./settings.sh"
         cd .. 
  fi
     rm -rf /extras
