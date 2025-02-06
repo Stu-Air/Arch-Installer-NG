@@ -1,6 +1,5 @@
 #! /bin/bash
 
-
 DRIVE='/dev/nvme0n1'                 # Drive you want to install Arch linux on
 HOSTNAME='animus'                     # Hostname of the installed machine
 ROOT_PASSWORD=''             # Root password (leave blank to be prompted)
@@ -15,7 +14,7 @@ CHIPSET="amd-ucode"                   # amd or intel
 # Extras
 APPS="Y"                              # "Y" or "N" install personal applications from github repo (https://github.com/Stu-Air/arch-apps)
 SETTINGS="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
-DESKTOP="gnome"                       # kde, xfce or gnome desktop, login manager installed also 
+DESKTOP="cinnamon"                       # kde, xfce or gnome desktop, login manager installed also 
 
 # Choose your video driver
     
@@ -268,6 +267,13 @@ set_extras() {
     then
         cd /
         pacman -Sy --noconfirm - < /xfce.txt
+        systemctl enable lightdm
+        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
+ fi
+if [ "$DESKTOP" = "cinnamon" ]
+    then
+        cd /
+        pacman -Sy --noconfirm - < /cinnamon.txt
         systemctl enable lightdm
         sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
  fi
