@@ -6,30 +6,24 @@ ROOT_PASSWORD=''             # Root password (leave blank to be prompted)
 USER_NAME=''                       # Main user to create (by default, added to wheel group, and others)
 USER_PASSWORD=''             # The main user's password (leave blank to be prompted)
 TIMEZONE=''             # System timezone
-KEYMAP=''                           # Keyboard layout used in system 
+KEYMAP=''                           # Keyboard layout used in system
 WIRELESS_DEVICE=""               # Wireless device, leave blank to not use wireless and use DHCP instead
-WIRELESS_SSID=""      # Router connection name 
+WIRELESS_SSID=""      # Router connection name
 CHIPSET="amd-ucode"                   # amd or intel
 
 # Extras
-APPS="Y"                              # "Y" or "N" install personal applications from github repo (https://github.com/Stu-Air/arch-apps)
+APPS="Y"                              # install personal applications from github repo
 SETTINGS="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
-DESKTOP="cinnamon"                       # kde, xfce or gnome desktop, login manager installed also 
+DESKTOP="kde"                    # kde, xfce or gnome desktop, login manager installed also
 
-# Choose your video driver
-    
-#VIDEO_DRIVER="i915"                  # For Intel
-#VIDEO_DRIVER="nouveau"               # For nVidia
-#VIDEO_DRIVER="radeon"                # For ATI
-#VIDEO_DRIVER="vesa"                  # For generic stuff
-
-setup() {   
+setup() {
 
    local boot_dev="$DRIVE"p1
    local sys_dev="$DRIVE"p2
-   
+
    echo "Connecting to wifi"
-   #wifi  (NOT WORKING)
+   #wifi
+
    #iwctl station "$WIRELESS_DEVICE" connect "$WIRELESS_SSID"
 
    echo "Creating partition tables"
@@ -90,6 +84,9 @@ configure() {
     echo 'Configuring initial ramdisk'
     set_initcpio
 
+    echo 'Setting initial daemons'
+    set_daemons
+
     echo 'Configuring bootloader'
     set_bootloader
 
@@ -111,9 +108,6 @@ configure() {
     echo 'Configuring extras'
     set_extras
 
-    echo 'Setting initial daemons'
-    set_daemons
-
     rm /installer.sh
     rm /pkglist.txt
     rm /"$DESKTOP".txt
@@ -127,7 +121,7 @@ wifi(){
 
 setPartitions(){
    (
-      echo d # 	Delete existing Partition 
+      echo d # 	Delete existing Partition
       echo   # 	Accept default
       echo d # 	Delete existing Partition
       echo   # 	Accept default
@@ -136,19 +130,19 @@ setPartitions(){
       echo d # 	Delete existing Partition
       echo   # 	Accept default
       echo g # 	Create u guid
-      echo n # 	Create new partition 
+      echo n # 	Create new partition
       echo   # 	Accept default
       echo   # 	Accept default
-      echo +512M #   Create first partition size 
-      echo t # 	Select type of partition 
+      echo +512M #   Create first partition size
+      echo t # 	Select type of partition
       echo   # 	Accept default
       echo 1 # 	Partition type 1 (EFI)
       echo   # 	Accept default (Partition 1 created)
-      echo n #	Create final partition 
+      echo n #	Create final partition
       echo   #	Accept default
       echo   #	Accept default
-      echo   #	Accept default (Partition 3 created rest of disk) 
-      echo w #	Write to disk 
+      echo   #	Accept default (Partition 3 created rest of disk)
+      echo w #	Write to disk
    ) | fdisk "$DRIVE"
 
    mkfs.fat -F32 "$boot_dev"	# Make partition 1 Fat format
@@ -162,15 +156,15 @@ mountPartitions(){
 
 installBase(){
    pacman -Sy --noconfirm archlinux-keyring
-   yes '' | pacstrap /mnt base linux-lts linux-firmware linux-lts-headers 
+   yes '' | pacstrap /mnt base linux-lts linux-firmware linux-lts-headers
    genfstab -U /mnt >> /mnt/etc/fstab
-  
-}    
+
+}
 
 unmount_filesystems() {
    umount /mnt
    umount /boot
-}  
+}
 
 install_packages() {
     echo "enable multilib packages"
@@ -180,7 +174,6 @@ install_packages() {
     pacman -Sy --noconfirm $CHIPSET
     pacman -Sy --noconfirm - < /pkglist.txt
 }
-
 
 clean_packages() {
     yes | sudo pacman -Rs $(pacman -Qqtd)
@@ -247,65 +240,13 @@ set_sudoers() {
     echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 }
 
-
-set_extras() {
-    sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
-    
- if [ "$DESKTOP" = "gnome" ]
-    then
-        cd/
-        pacman -Sy --noconfirm - < /gnome.txt
-        systemctl enable gdm
- fi
- if [ "$DESKTOP" = "kde" ]
-    then
-        cd /
-        pacman -Sy --noconfirm - < /kde.txt
-        sysyemctl enable sddm
- fi       
- if [ "$DESKTOP" = "xfce" ]
-    then
-        cd /
-        pacman -Sy --noconfirm - < /xfce.txt
-        systemctl enable lightdm
-        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
- fi
-if [ "$DESKTOP" = "cinnamon" ]
-    then
-        cd /
-        pacman -Sy --noconfirm - < /cinnamon.txt
-        systemctl enable lightdm
-        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
- fi
-
-mkdir /extras
-
-if [ "$APPS" = "Y" ]
-    then 
-        cd /extras
-        git clone https://github.com/Stu-Air/arch-apps.git
-        cd arch-apps
-        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./applications.sh"
-        cd ..
- fi
-  if [ "$SETTINGS" = "Y" ]
-    then 
-        cd /extras
-        git clone https://github.com/Stu-Air/dotfiles.git
-        cd dotfiles
-        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./settings.sh"
-        cd .. 
- fi
-    rm -rf /extras
-}
-
 install_paru() {
-    cd ~ 
-    git clone https://aur.archlinux.org/paru-bin.git 
+    cd ~
+    git clone https://aur.archlinux.org/paru-bin.git
     chown $USER_NAME:$USER_NAME ~
     chmod -R 777 paru-bin
     cd paru-bin
-    echo -en "$USER_PASSWORD" |sudo -u $USER_NAME makepkg -si --noconfirm
+    echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -u $USER_NAME makepkg -si --noconfirm
 }
 
 set_root_password() {
@@ -316,6 +257,60 @@ create_user() {
     useradd -m -G wheel -s /bin/bash $USER_NAME
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | passwd "$USER_NAME"
     }
+
+##############################################################################################################################
+########################################################    EXTRAS    ########################################################
+##############################################################################################################################
+
+set_extras() {
+    sudo sh -c 'echo "vm.swappiness=10" >> /etc/sysctl.d/99-swappiness.conf'
+
+    if [ "$DESKTOP" = "gnome" ]
+       then
+        cd /
+        pacman -Sy --noconfirm - < /gnome.txt
+        systemctl enable gdm
+    fi
+    if [ "$DESKTOP" = "kde" ]
+       then
+        cd /
+        pacman -Sy --noconfirm - < /kde.txt
+        systemctl enable sddm
+    fi
+    if [ "$DESKTOP" = "xfce" ]
+       then
+        cd /
+        pacman -Sy --noconfirm - < /xfce.txt
+        sudo systemctl enable lightdm
+        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
+    fi
+    if [ "$DESKTOP" = "cinnamon" ]
+       then
+        cd /
+        pacman -Sy --noconfirm - < /cinnamon.txt
+        sudo systemctl enable lightdm
+        sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
+    fi
+
+    mkdir ~/extras
+
+if [ "$APPS" = "Y" ]
+    then
+        cd ~/extras
+        git clone https://github.com/Stu-Air/arch-apps.git
+        cd arch-apps
+        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./applications.sh"
+ fi
+  if [ "$SETTINGS" = "Y" ]
+    then
+        cd ~/
+        git clone https://github.com/Stu-Air/dotfiles.git
+        cd dotfiles
+        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./settings.sh"
+ fi
+    rm -rf ~/extras
+}
+
 
 if [ "$1" == "chroot" ]
 then
