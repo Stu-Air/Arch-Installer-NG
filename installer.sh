@@ -100,7 +100,7 @@ configure() {
     create_user "$USER_NAME" "$USER_PASSWORD"
 
     echo 'Installing paru aur helper'
-    install_paru
+    install_aur_helper
 
     echo 'Building locate database'
     update_locate
@@ -240,12 +240,12 @@ set_sudoers() {
     echo '%wheel ALL=(ALL) ALL' | EDITOR='tee -a' visudo
 }
 
-install_paru() {
+install_aur_helper() {
     cd ~
-    git clone https://aur.archlinux.org/paru-bin.git
+    git clone https://aur.archlinux.org/yay-bin.git
     chown $USER_NAME:$USER_NAME ~
-    chmod -R 777 paru-bin
-    cd paru-bin
+    chmod -R 777 yay-bin
+    cd yay-bin
     echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -u $USER_NAME makepkg -si --noconfirm
 }
 
