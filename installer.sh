@@ -13,7 +13,7 @@ CHIPSET="amd-ucode"                   # amd or intel
 
 # Extras
 APPS="Y"                              # install personal applications from github repo
-SETTINGS="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
+DOTFILES="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
 DESKTOP="kde"                    # kde, xfce or gnome desktop, login manager installed also
 
 setup() {
@@ -301,7 +301,7 @@ if [ "$APPS" = "Y" ]
         cd arch-apps
         echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./applications.sh"
  fi
-  if [ "$SETTINGS" = "Y" ]
+  if [ "$DOTFILES" = "Y" ]
     then
         cd ~/
         git clone https://github.com/Stu-Air/dotfiles.git
