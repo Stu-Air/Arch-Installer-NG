@@ -306,7 +306,7 @@ if [ "$APPS" = "Y" ]
         cd ~/
         git clone https://github.com/Stu-Air/dotfiles.git
         cd dotfiles
-        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./settings.sh"
+        echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./dotfiles.sh"
  fi
     rm -rf ~/extras
 }
