@@ -36,3 +36,4 @@ xorg-apps
 xdg-user-dirs
 xf86-video-amdgpu
 xf86-input-synaptics
+libappindicator
