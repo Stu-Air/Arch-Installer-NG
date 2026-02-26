@@ -48,3 +48,6 @@
 	lib32-vulkan-icd-loader 
 	vulkan-icd-loader 
 	gamemode 
+	lib32-mesa 
+	vulkan-radeon 
+	lib32-vulkan-radeon 
