@@ -14,7 +14,8 @@ CHIPSET="amd-ucode"                   # amd or intel
 # Extras
 APPS="Y"                              # install personal applications from github repo
 DOTFILES="Y"                          # "Y" or "N" install personal dotfiles from github repo (https://github.com/Stu-Air/dotfiles)
-DESKTOP="kde"                    # kde, xfce or gnome desktop, login manager installed also
+DESKTOP="kde"                         # kde, xfce or gnome desktop, login manager installed also
+GAMING="Y"                            # This is for an AMD Gpu ( I have an all AMD system GO TEAM RED!!! )
 
 setup() {
 
@@ -308,9 +309,14 @@ if [ "$APPS" = "Y" ]
         cd dotfiles
         echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./dotfiles.sh"
  fi
+
+if [ "$GAMING" = "Y" ]
+    then
+        cd /
+        pacman -Sy --noconfirm - < /gaming.txt
+ fi
     rm -rf ~/extras
 }
-
 
 if [ "$1" == "chroot" ]
 then
