@@ -314,6 +314,9 @@ if [ "$GAMING" = "Y" ]
     then
         cd /
         pacman -Sy --noconfirm - < /gaming.txt
+         # ACO - Faster Compiling (AMD Only)
+	      #Add this to /etc/environment
+	      echo "RADV_PERFTEST=aco" | sudo tee -a /etc/environment
  fi
     rm -rf ~/extras
 }
