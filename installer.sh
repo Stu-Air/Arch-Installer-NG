@@ -293,14 +293,14 @@ set_extras() {
         sudo sed -i 's/#logind-check-graphical=false/logind-check-graphical=true/g' /etc/lightdm/lightdm.conf
     fi
 
-    mkdir ~/extras
+    mkdir ~/extras && cd ~/extras
 
 if [ "$APPS" = "Y" ]
     then
-        cd ~/extras
         git clone https://github.com/Stu-Air/arch-apps.git
         cd arch-apps
         echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./applications.sh"
+		cd ..
  fi
   if [ "$DOTFILES" = "Y" ]
     then
@@ -308,11 +308,11 @@ if [ "$APPS" = "Y" ]
         git clone https://github.com/Stu-Air/dotfiles.git
         cd dotfiles
         echo -en "$USER_PASSWORD\n$USER_PASSWORD" | sudo -H -u "$USER_NAME" bash -c "sh ./dotfiles.sh"
+		cd ..
  fi
 
 if [ "$GAMING" = "Y" ]
     then
-        cd /
         pacman -Sy --noconfirm - < /gaming.txt
          # ACO - Faster Compiling (AMD Only)
 	      #Add this to /etc/environment
