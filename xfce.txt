@@ -1,0 +1,13 @@
+xfce4
+xfce4-goodies
+pavucontrol
+gvfs
+xarchiver
+xfce4-terminal
+xfce4-screenshooter
+network-manager-applet
+gparted
+xfce4-screensaver
+thunar
+lightdm
+lightdm-gtk-greeter
